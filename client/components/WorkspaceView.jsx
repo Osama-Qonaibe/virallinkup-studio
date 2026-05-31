@@ -149,9 +149,6 @@ export default function WorkspaceView({ project, projects, onClose, onRefresh, o
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
             AI
           </button>
-          <button className="ws-header-btn" onClick={onOpenAdmin} title="API Keys">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          </button>
         </div>
       </div>
 
