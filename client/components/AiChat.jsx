@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './AiChat.css';
 
-export default function AiChat({ activeFile, fileContent }) {
+export default function AiChat({ activeFile, fileContent, adminToken }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -10,12 +10,12 @@ export default function AiChat({ activeFile, fileContent }) {
   const [showConfig, setShowConfig] = useState(false);
   const bottomRef = useRef(null);
 
-  useEffect(() => { loadKeys(); }, []);
+  useEffect(() => { loadKeys(); }, [adminToken]);
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   async function loadKeys() {
     try {
-      const token = sessionStorage.getItem('studio_admin_token');
+      const token = adminToken || sessionStorage.getItem('studio_admin_token');
       if (!token) return;
       const res = await fetch('/api/admin/keys', { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) setKeys(await res.json());
@@ -29,7 +29,6 @@ export default function AiChat({ activeFile, fileContent }) {
     setMessages(newMessages);
     setInput('');
     setLoading(true);
-
     try {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
@@ -43,11 +42,7 @@ export default function AiChat({ activeFile, fileContent }) {
         })
       });
       const data = await res.json();
-      if (data.error) {
-        setMessages(m => [...m, { role: 'assistant', content: `❌ Error: ${data.error}` }]);
-      } else {
-        setMessages(m => [...m, { role: 'assistant', content: data.content }]);
-      }
+      setMessages(m => [...m, { role: 'assistant', content: data.error ? `❌ ${data.error}` : data.content }]);
     } catch (e) {
       setMessages(m => [...m, { role: 'assistant', content: `❌ ${e.message}` }]);
     }
@@ -55,8 +50,7 @@ export default function AiChat({ activeFile, fileContent }) {
   }
 
   function renderContent(content) {
-    const parts = content.split(/(```[\s\S]*?```)/g);
-    return parts.map((part, i) => {
+    return content.split(/(```[\s\S]*?```)/g).map((part, i) => {
       if (part.startsWith('```')) {
         const lines = part.slice(3, -3).split('\n');
         const lang = lines[0].trim();
@@ -75,16 +69,16 @@ export default function AiChat({ activeFile, fileContent }) {
   return (
     <div className="ai-chat">
       <div className="ai-chat-header">
-        <span>🤖 AI Assistant</span>
+        <span>AI Assistant</span>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           {activeFile && (
-            <label className="chat-ctx-toggle" title="Include current file as context">
+            <label className="chat-ctx-toggle" title="Include file context">
               <input type="checkbox" checked={config.useFileContext} onChange={e => setConfig(c => ({ ...c, useFileContext: e.target.checked }))} />
               <span>ctx</span>
             </label>
           )}
-          <button className="btn btn-ghost btn-sm" onClick={() => { setShowConfig(s => !s); loadKeys(); }}>⚙</button>
-          <button className="btn btn-ghost btn-sm" onClick={() => setMessages([])}>🗑</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => { setShowConfig(s => !s); if (!showConfig) loadKeys(); }} title="Model settings">⚙</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setMessages([])} title="Clear chat">🗑</button>
         </div>
       </div>
 
@@ -93,9 +87,12 @@ export default function AiChat({ activeFile, fileContent }) {
           <div className="ai-config-row">
             <label>API Key</label>
             <select value={config.keyId} onChange={e => setConfig(c => ({ ...c, keyId: e.target.value }))}>
-              <option value="">None / env</option>
+              <option value="">None / env default</option>
               {keys.map(k => <option key={k.id} value={k.id}>{k.name}</option>)}
             </select>
+            {keys.length === 0 && (
+              <span className="ai-config-hint">No keys — add them in Admin Panel</span>
+            )}
           </div>
           <div className="ai-config-row">
             <label>Base URL</label>
@@ -121,7 +118,7 @@ export default function AiChat({ activeFile, fileContent }) {
         {loading && (
           <div className="ai-message ai-message-assistant">
             <span className="ai-role">🤖</span>
-            <div className="ai-typing"><span/><span/><span/></div>
+            <div className="ai-typing"><span /><span /><span /></div>
           </div>
         )}
         <div ref={bottomRef} />

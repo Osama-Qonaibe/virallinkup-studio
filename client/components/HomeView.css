@@ -12,8 +12,7 @@
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  padding: 16px 0;
-  gap: 0;
+  padding: 16px 0 0;
 }
 
 .home-logo {
@@ -48,14 +47,19 @@
 .home-nav-btn:hover { background: var(--surface-2); color: var(--text); }
 .home-nav-btn.active { background: var(--surface-3); color: var(--text); }
 
+.home-sidebar-bottom {
+  margin-top: auto;
+  padding: 8px 8px 0;
+  border-top: 1px solid var(--border);
+}
+
 .home-sidebar-projects {
-  margin-top: 20px;
-  padding: 0 8px;
-  flex: 1;
+  padding: 12px 8px 8px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  max-height: 240px;
 }
 
 .home-section-label {
@@ -64,7 +68,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-muted);
-  padding: 0 12px 8px;
+  padding: 0 12px 6px;
 }
 
 .home-recent-item {
@@ -93,10 +97,7 @@
   padding: 60px 40px 40px;
 }
 
-.home-hero {
-  text-align: center;
-  margin-bottom: 36px;
-}
+.home-hero { text-align: center; margin-bottom: 36px; }
 
 .home-title {
   font-size: 32px;
@@ -108,10 +109,7 @@
   margin-bottom: 10px;
 }
 
-.home-subtitle {
-  font-size: 15px;
-  color: var(--text-muted);
-}
+.home-subtitle { font-size: 15px; color: var(--text-muted); }
 
 .home-search-wrap {
   width: 100%;
@@ -146,11 +144,7 @@
 .home-search-input:focus { border: none; outline: none; }
 .home-search-input::placeholder { color: var(--text-muted); }
 
-.home-quick-btns {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
+.home-quick-btns { display: flex; gap: 8px; justify-content: center; }
 
 .home-quick-btn {
   display: flex;
@@ -197,18 +191,11 @@
 .hpc-arrow { color: var(--text-muted); opacity: 0; transition: var(--transition); }
 .home-project-card:hover .hpc-arrow { opacity: 1; color: var(--accent); }
 
-.home-form-wrap {
-  width: 100%;
-  max-width: 500px;
-}
+.home-form-wrap { width: 100%; max-width: 500px; }
 .home-form-wrap h2 { font-size: 22px; margin-bottom: 8px; }
 .home-form-wrap p { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
 
-.home-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+.home-form { display: flex; flex-direction: column; gap: 10px; }
 .home-form label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 .home-form input, .home-form select { font-size: 14px; padding: 10px 14px; }
 

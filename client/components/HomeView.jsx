@@ -67,13 +67,15 @@ export default function HomeView({ projects, onOpenProject, onRefresh, onOpenAdm
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
             Clone from GitHub
           </button>
+        </nav>
+        <div className="home-sidebar-bottom">
           <button className="home-nav-btn" onClick={onOpenAdmin}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            API Keys
+            Admin Panel
           </button>
-        </nav>
+        </div>
         <div className="home-sidebar-projects">
-          <div className="home-section-label">Recent Projects</div>
+          <div className="home-section-label">Recent</div>
           {projects.slice(0, 8).map(p => (
             <button key={p.name} className="home-recent-item" onClick={() => onOpenProject(p)}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
@@ -90,17 +92,10 @@ export default function HomeView({ projects, onOpenProject, onRefresh, onOpenAdm
               <h1 className="home-title">ViralLinkUp Studio</h1>
               <p className="home-subtitle">Your AI-powered development workspace</p>
             </div>
-
             <div className="home-search-wrap">
               <div className="home-search-box">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input
-                  className="home-search-input"
-                  placeholder="Search projects..."
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  autoFocus
-                />
+                <input className="home-search-input" placeholder="Search projects..." value={input} onChange={e => setInput(e.target.value)} autoFocus />
               </div>
               <div className="home-quick-btns">
                 <button className="home-quick-btn" onClick={() => { setMode('new'); setError(''); }}>
@@ -111,17 +106,10 @@ export default function HomeView({ projects, onOpenProject, onRefresh, onOpenAdm
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
                   Clone
                 </button>
-                <button className="home-quick-btn" onClick={onOpenAdmin}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                  Keys
-                </button>
               </div>
             </div>
-
             <div className="home-projects-grid">
-              {filtered.length === 0 && input && (
-                <div className="home-empty">No projects found</div>
-              )}
+              {filtered.length === 0 && input && <div className="home-empty">No projects found</div>}
               {filtered.map(p => (
                 <button key={p.name} className="home-project-card" onClick={() => onOpenProject(p)}>
                   <div className="hpc-icon">
