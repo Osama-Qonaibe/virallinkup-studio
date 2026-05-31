@@ -1,7 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  root: path.resolve(__dirname, 'client'),
   plugins: [react()],
   server: {
     port: 5173,
@@ -10,5 +15,5 @@ export default defineConfig({
       '/ws': { target: 'ws://localhost:4000', ws: true }
     }
   },
-  build: { outDir: 'dist/public' }
+  build: { outDir: path.resolve(__dirname, 'dist/public'), emptyOutDir: true }
 });
