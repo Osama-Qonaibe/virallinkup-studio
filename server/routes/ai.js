@@ -1,54 +1,47 @@
 import express from 'express';
+import { refactorCode, explainCode, completeCode } from '../services/ai.js';
 import pool from '../db.js';
 
 const router = express.Router();
 
-router.get('/providers', async (req, res) => {
-  const result = await pool.query(
-    "SELECT id, name, project FROM api_keys WHERE name ILIKE '%AI_PROVIDER%' OR name ILIKE '%BASE_URL%' OR name ILIKE '%MODEL%' OR name ILIKE '%API_KEY%' ORDER BY name"
+async function getKeyForProvider(provider) {
+  const res = await pool.query(
+    'SELECT key_value, endpoint FROM api_keys WHERE LOWER(name) LIKE $1 LIMIT 1',
+    [`%${provider.toLowerCase()}%`]
   );
-  res.json(result.rows);
+  return res.rows[0] || null;
+}
+
+router.post('/refactor', async (req, res) => {
+  const { code, language, instruction, provider = 'openai' } = req.body;
+  if (!code) return res.status(400).json({ error: 'code required' });
+  const key = await getKeyForProvider(provider);
+  if (!key) return res.status(400).json({ error: `No API key found for ${provider}` });
+  try {
+    const result = await refactorCode({ code, language, instruction, apiKey: key.key_value, endpoint: key.endpoint });
+    res.json({ result });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.post('/chat', async (req, res) => {
-  const { messages, provider, baseUrl, model, keyId, fileContext } = req.body;
-
-  let apiKey = '';
-  if (keyId) {
-    const r = await pool.query('SELECT key_value FROM api_keys WHERE id = $1', [keyId]);
-    if (r.rows.length) apiKey = r.rows[0].key_value;
-  }
-
-  const systemPrompt = fileContext
-    ? `You are a coding assistant. The user is working on this file:\n\`\`\`\n${fileContext}\n\`\`\`\nHelp them with their code. When suggesting code changes, wrap code in triple backticks with the language.`
-    : 'You are a helpful coding assistant.';
-
-  const allMessages = [{ role: 'system', content: systemPrompt }, ...messages];
-
-  const url = baseUrl
-    ? `${baseUrl.replace(/\/$/, '')}/chat/completions`
-    : 'https://api.openai.com/v1/chat/completions';
-
+router.post('/explain', async (req, res) => {
+  const { code, language, provider = 'openai' } = req.body;
+  if (!code) return res.status(400).json({ error: 'code required' });
+  const key = await getKeyForProvider(provider);
+  if (!key) return res.status(400).json({ error: `No API key found for ${provider}` });
   try {
-    const fetchRes = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {})
-      },
-      body: JSON.stringify({ model: model || 'gpt-4o-mini', messages: allMessages, stream: false })
-    });
+    const result = await explainCode({ code, language, apiKey: key.key_value, endpoint: key.endpoint });
+    res.json({ result });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
 
-    if (!fetchRes.ok) {
-      const err = await fetchRes.text();
-      return res.status(fetchRes.status).json({ error: err });
-    }
-
-    const data = await fetchRes.json();
-    res.json({ content: data.choices?.[0]?.message?.content || '' });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+router.post('/complete', async (req, res) => {
+  const { prefix, suffix, language, provider = 'openai' } = req.body;
+  const key = await getKeyForProvider(provider);
+  if (!key) return res.status(400).json({ error: `No API key found for ${provider}` });
+  try {
+    const result = await completeCode({ prefix, suffix, language, apiKey: key.key_value, endpoint: key.endpoint });
+    res.json({ result });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 export default router;
