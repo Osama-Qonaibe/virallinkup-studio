@@ -10,8 +10,12 @@ export async function initDb() {
       name VARCHAR(100) NOT NULL,
       key_value TEXT NOT NULL,
       project VARCHAR(100),
+      endpoint TEXT,
       created_at TIMESTAMP DEFAULT NOW()
     );
+  `);
+  await pool.query(`
+    ALTER TABLE api_keys ADD COLUMN IF NOT EXISTS endpoint TEXT;
   `);
 }
 
