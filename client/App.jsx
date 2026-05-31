@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import Editor from './components/Editor.jsx';
 import Preview from './components/Preview.jsx';
 import Terminal from './components/Terminal.jsx';
 import EnvEditor from './components/EnvEditor.jsx';
 import AdminPanel from './components/AdminPanel.jsx';
+import AiChat from './components/AiChat.jsx';
 import './styles/layout.css';
 
 export default function App() {
@@ -14,9 +15,16 @@ export default function App() {
   const [showEnv, setShowEnv] = useState(false);
   const [showTerminal, setShowTerminal] = useState(true);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showAi, setShowAi] = useState(true);
+  const [fileContent, setFileContent] = useState('');
   const [previewKey, setPreviewKey] = useState(0);
 
   useEffect(() => { loadProjects(); }, []);
+
+  useEffect(() => {
+    if (activeProject && activeFile) loadFileContent();
+    else setFileContent('');
+  }, [activeProject, activeFile]);
 
   async function loadProjects() {
     const res = await fetch('/api/projects');
@@ -24,8 +32,15 @@ export default function App() {
     setProjects(data);
   }
 
+  async function loadFileContent() {
+    const res = await fetch(`/api/files/${activeProject.name}/read?path=${encodeURIComponent(activeFile.path)}`);
+    const data = await res.json();
+    setFileContent(data.content || '');
+  }
+
   function handleFileChange() {
     setPreviewKey(k => k + 1);
+    if (activeProject && activeFile) loadFileContent();
   }
 
   return (
@@ -44,6 +59,7 @@ export default function App() {
               <button className="btn btn-ghost" onClick={() => setShowTerminal(t => !t)}>⬛ Terminal</button>
             </>
           )}
+          <button className="btn btn-ghost" onClick={() => setShowAi(t => !t)}>🤖 AI</button>
           <button className="btn btn-ghost" onClick={() => setShowAdmin(true)}>🔐 Keys</button>
         </div>
       </div>
@@ -75,6 +91,10 @@ export default function App() {
             <Terminal project={activeProject?.name} />
           )}
         </div>
+
+        {showAi && (
+          <AiChat activeFile={activeFile} fileContent={fileContent} />
+        )}
       </div>
 
       {showEnv && (

@@ -9,6 +9,7 @@ import projectsRouter from './routes/projects.js';
 import filesRouter from './routes/files.js';
 import githubRouter from './routes/github.js';
 import adminRouter from './routes/admin.js';
+import aiRouter from './routes/ai.js';
 import terminalHandler from './ws/terminal.js';
 import previewHandler from './ws/preview.js';
 import { initDb } from './db.js';
@@ -26,6 +27,7 @@ app.use('/api/projects', projectsRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/github', githubRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/ai', aiRouter);
 
 wss.on('connection', (ws, req) => {
   const url = new URL(req.url, 'http://localhost');
