@@ -1,0 +1,211 @@
+.ws-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.ws-header {
+  height: 44px;
+  min-height: 44px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  gap: 8px;
+  z-index: 10;
+}
+
+.ws-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ws-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.ws-back-btn:hover { background: var(--surface-2); color: var(--text); }
+
+.ws-logo { flex-shrink: 0; display: flex; }
+
+.ws-project-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.ws-file-breadcrumb {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ws-saving { font-size: 11px; color: var(--text-muted); }
+.ws-dirty { font-size: 12px; color: var(--warning); }
+
+.ws-header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.ws-header-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.ws-header-btn:hover { background: var(--surface-2); color: var(--text); }
+.ws-header-btn.active { background: var(--surface-3); color: var(--text); }
+
+.ws-deploy-btn {
+  background: var(--accent);
+  color: #fff;
+}
+.ws-deploy-btn:hover { background: var(--accent-hover); color: #fff; }
+.ws-deploy-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.ws-deploy-msg {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.ws-deploy-msg.success { color: var(--success); }
+.ws-deploy-msg.error { color: var(--error); }
+
+.ws-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+.ws-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.ws-filetree {
+  width: 200px;
+  min-width: 200px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ws-filetree-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ws-filetree-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.ws-file-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: var(--transition);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+.ws-file-item:hover { background: var(--surface-2); color: var(--text); }
+.ws-file-item.active { background: var(--surface-3); color: var(--text); }
+.ws-file-item.ws-dir { color: var(--text); font-weight: 500; }
+.ws-file-chevron { font-size: 10px; flex-shrink: 0; }
+.ws-file-dot { color: var(--border); flex-shrink: 0; }
+
+.ws-editor-area {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ws-editor-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-muted);
+}
+.ws-editor-empty p { font-size: 14px; }
+
+.ws-preview-area {
+  width: 380px;
+  min-width: 280px;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.ws-preview-header {
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.ws-preview-iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+}
