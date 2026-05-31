@@ -4,6 +4,7 @@ import Editor from './components/Editor.jsx';
 import Preview from './components/Preview.jsx';
 import Terminal from './components/Terminal.jsx';
 import EnvEditor from './components/EnvEditor.jsx';
+import AdminPanel from './components/AdminPanel.jsx';
 import './styles/layout.css';
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
   const [activeFile, setActiveFile] = useState(null);
   const [showEnv, setShowEnv] = useState(false);
   const [showTerminal, setShowTerminal] = useState(true);
+  const [showAdmin, setShowAdmin] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
 
   useEffect(() => { loadProjects(); }, []);
@@ -42,6 +44,7 @@ export default function App() {
               <button className="btn btn-ghost" onClick={() => setShowTerminal(t => !t)}>⬛ Terminal</button>
             </>
           )}
+          <button className="btn btn-ghost" onClick={() => setShowAdmin(true)}>🔐 Keys</button>
         </div>
       </div>
 
@@ -79,6 +82,10 @@ export default function App() {
           project={activeProject?.name}
           onClose={() => setShowEnv(false)}
         />
+      )}
+
+      {showAdmin && (
+        <AdminPanel onClose={() => setShowAdmin(false)} />
       )}
     </div>
   );

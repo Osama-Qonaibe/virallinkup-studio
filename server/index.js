@@ -7,8 +7,10 @@ import { fileURLToPath } from 'url';
 import projectsRouter from './routes/projects.js';
 import filesRouter from './routes/files.js';
 import githubRouter from './routes/github.js';
+import adminRouter from './routes/admin.js';
 import terminalHandler from './ws/terminal.js';
 import previewHandler from './ws/preview.js';
+import { initDb } from './db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -22,6 +24,7 @@ app.use(express.static(path.join(__dirname, '../dist/public')));
 app.use('/api/projects', projectsRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/github', githubRouter);
+app.use('/api/admin', adminRouter);
 
 wss.on('connection', (ws, req) => {
   const url = new URL(req.url, 'http://localhost');
@@ -35,6 +38,7 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`[OsamaStudio] Running on port ${PORT}`);
-});
+
+initDb()
+  .then(() => server.listen(PORT, () => console.log(`[OsamaStudio] Running on port ${PORT}`)))
+  .catch(err => { console.error('[DB] Init failed:', err.message); process.exit(1); });
