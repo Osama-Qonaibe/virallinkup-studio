@@ -5,9 +5,9 @@ import pool from '../db.js';
 
 const router = express.Router();
 
-const JWT_SECRET    = process.env.STUDIO_JWT_SECRET;
-const ADMIN_EMAIL   = process.env.ADMIN_EMAIL;
-const ADMIN_PASS    = process.env.ADMIN_PASSWORD;
+const JWT_SECRET  = process.env.STUDIO_JWT_SECRET;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASS  = process.env.ADMIN_PASSWORD;
 
 if (!JWT_SECRET || !ADMIN_EMAIL || !ADMIN_PASS) {
   console.error('[FATAL] STUDIO_JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD must be set in .env');
@@ -39,7 +39,9 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/keys', requireAdmin, async (req, res) => {
-  const result = await pool.query('SELECT id, name, project, created_at FROM api_keys ORDER BY created_at DESC');
+  const result = await pool.query(
+    'SELECT id, name, project, endpoint, created_at FROM api_keys ORDER BY created_at DESC'
+  );
   res.json(result.rows);
 });
 
@@ -50,11 +52,11 @@ router.get('/keys/:id/value', requireAdmin, async (req, res) => {
 });
 
 router.post('/keys', requireAdmin, async (req, res) => {
-  const { name, key_value, project } = req.body;
+  const { name, key_value, project, endpoint } = req.body;
   if (!name || !key_value) return res.status(400).json({ error: 'name and key_value required' });
   const result = await pool.query(
-    'INSERT INTO api_keys (name, key_value, project) VALUES ($1, $2, $3) RETURNING id, name, project, created_at',
-    [name, key_value, project || null]
+    'INSERT INTO api_keys (name, key_value, project, endpoint) VALUES ($1, $2, $3, $4) RETURNING id, name, project, endpoint, created_at',
+    [name, key_value, project || null, endpoint || null]
   );
   res.json(result.rows[0]);
 });
