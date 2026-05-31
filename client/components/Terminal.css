@@ -1,0 +1,26 @@
+.terminal-panel {
+  height: 220px;
+  min-height: 220px;
+  background: #0d0d0d;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.terminal-tab {
+  height: 32px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.terminal-project { color: var(--accent); font-family: var(--font-mono); font-size: 11px; }
+
+.terminal-container { flex: 1; padding: 6px; overflow: hidden; }
