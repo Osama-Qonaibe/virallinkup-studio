@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   apps: [{
     name: 'virallinkup-studio',
@@ -5,10 +7,14 @@ module.exports = {
     instances: 1,
     autorestart: true,
     watch: false,
-    env_file: '.env',
     env: {
       NODE_ENV: 'production',
-      PORT: 4000
+      PORT: process.env.PORT || 4000,
+      DATABASE_URL: process.env.DATABASE_URL,
+      STUDIO_SECRET: process.env.STUDIO_SECRET,
+      GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+      GITHUB_USERNAME: process.env.GITHUB_USERNAME,
+      PROJECTS_DIR: process.env.PROJECTS_DIR
     }
   }]
 };
